@@ -17,6 +17,8 @@ USES=		cargo
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	lapce
+# https://reviews.freebsd.org/D24231
+# x11/ly/Makefile _git-submodules-to-gh-tuple
 GH_TUPLE=	6cdh:tree-sitter-scheme:v0.4.0-21-gaf3af6c:ts1/grammars/tree-sitter-scheme \
 		abreumatheus:tree-sitter-clojure:fdc969e:ts2/grammars/tree-sitter-clojure \
 		alex-pinkus:tree-sitter-swift:0.3.6-10-g29541ac:ts3/grammars/tree-sitter-swift \
@@ -82,13 +84,15 @@ post-extract:
 do-build:
 	# we need to build build-tree-sitter first
 	# see .github/workflows/release.yaml
-	# XXX fix cargo args
-	cd ${WRKSRC}/build-tree-sitter ; cargo build --release
-	# XXX fixme when "XXX fix cargo args" is fixed
-	cd ${WRKSRC} ; build-tree-sitter/target/release/build-tree-sitter --output ./output
+	# this is ${CARGO_CARGO_RUN} minus "cd ${WRKSRC}"
+	cd ${WRKSRC}/build-tree-sitter; \
+		${SETENVI} ${WRK_ENV} ${MAKE_ENV} ${CARGO_ENV} CARGO_FREEBSD_PORTS_SKIP_GIT_UPDATE=1 ${CARGO} build --verbose --verbose ${CARGO_BUILD_ARGS}
+
+	cd ${WRKSRC}; \
+		${CARGO_TARGET_DIR}/${CARGO_BUILD_TARGET}/*/build-tree-sitter --output ./output
 
 do-install:
-	# XXX where does it belong?
+	# XXX where should it belong?
 	${INSTALL_LIB} ${WRKSRC}/output/*.so ${STAGEDIR}${PREFIX}/lib
 
 .include <bsd.port.mk>
