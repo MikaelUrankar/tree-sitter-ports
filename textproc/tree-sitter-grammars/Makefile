@@ -92,7 +92,6 @@ do-build:
 		${CARGO_TARGET_DIR}/${CARGO_BUILD_TARGET}/*/build-tree-sitter --output ./output
 
 do-install:
-	${MKDIR} ${STAGEDIR}${PREFIX}/share/tree-sitter/grammars
-	${INSTALL_LIB} ${WRKSRC}/output/*.so ${STAGEDIR}${PREFIX}/share/tree-sitter/grammars
+	${INSTALL_LIB} ${WRKSRC}/output/*.so ${STAGEDIR}${PREFIX}/lib
 
 .include <bsd.port.mk>
