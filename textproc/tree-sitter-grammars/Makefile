@@ -13,7 +13,7 @@ WWW=		https://github.com/lapce/tree-sitter-grammars
 # XXX to be created, should be easy
 BUILD_DEPENDS=	tree-sitter:devel/tree-sitter-cli
 
-USES=		cargo
+USES=		cargo node:build
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	lapce
